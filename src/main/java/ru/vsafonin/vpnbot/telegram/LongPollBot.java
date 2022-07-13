@@ -1,10 +1,12 @@
 package ru.vsafonin.vpnbot.telegram;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -21,6 +23,9 @@ public class LongPollBot extends TelegramLongPollingBot {
     private String botName;
 
     private String botToken;
+
+    @Autowired
+    private MessageHandler messageHandler;
 
     public LongPollBot(@Value("${telegram.name}") String botName,
                        @Value("${telegram.token}") String botToken) {
@@ -41,7 +46,7 @@ public class LongPollBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         try {
-            execute(new SendMessage(update.getMessage().getChatId().toString(), "I'm, alive"));
+            execute(messageHandler.answerMessage(update.getMessage()));
         } catch (TelegramApiException e) {
             log.error(">>>> exceptional situation, when LongPollBot trying send message");
             throw new RuntimeException(e);
