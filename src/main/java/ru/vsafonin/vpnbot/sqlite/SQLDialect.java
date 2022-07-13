@@ -8,6 +8,10 @@ import org.hibernate.type.StringType;
 
 import java.sql.Types;
 
+/**
+ * This is helper class for using the SQLite db
+ * natively spring doesn't support the sqlite, this is workaround
+ */
 public class SQLDialect extends Dialect{
     public SQLDialect(){
         registerColumnType(Types.DOUBLE, "double");
