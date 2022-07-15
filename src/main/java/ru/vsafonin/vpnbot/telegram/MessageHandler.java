@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.vsafonin.vpnbot.entity.User;
+import ru.vsafonin.vpnbot.entity.TgUser;
 import ru.vsafonin.vpnbot.enums.CommandType;
 import ru.vsafonin.vpnbot.exception.CommandNotFoundExp;
 import ru.vsafonin.vpnbot.exception.NeedRegistrationExp;
@@ -47,10 +47,11 @@ public class MessageHandler extends SendDocument {
             answerMessageString = messageSource.getMessage("needRegistration", null, userLocaleInTelegramm);
             sendMessage.setText(answerMessageString);
             return sendMessage;
-        }
+         }
 
         try {
-            CommandType userComand = getComamndType(message.getText());
+            CommandType userCommand = getComamndType(message.getText(),userLocaleInTelegramm);
+            return getAnswerMessage(userCommand, sendMessage, userLocaleInTelegramm,chatId);
         }
         catch (CommandNotFoundExp exp){
             log.info(">>>> user " + chatId + " write command which is not command, he write is " + message.getText());
@@ -58,11 +59,38 @@ public class MessageHandler extends SendDocument {
             sendMessage.setText(answerMessageString);
             return sendMessage;
         }
-        throw new RuntimeException(">>>> this is impossible, but i'm here..");
+
+
     }
 
-    private CommandType getComamndType(String text) throws CommandNotFoundExp{
-        throw new CommandNotFoundExp();
+    /**
+     * this method calls other depending on CommandType. The other method returns String
+     * and this string we are set into Sendmessage.
+     * @param userCommand
+     * @param sendMessage
+     * @return
+     */
+    private SendMessage getAnswerMessage(CommandType userCommand, SendMessage sendMessage, Locale userLocale, Integer chatId) {
+        String answerMessage = new String();
+        if (userCommand == CommandType.GET_BALANCE){
+            answerMessage = getBalance(userLocale, chatId);
+        }
+        sendMessage.setText(answerMessage);
+        return sendMessage;
+    }
+
+    private String getBalance(Locale userLocale, Integer chatId) {
+        String answerMessage = messageSource.getMessage("balanceMessage",null,userLocale) +
+                userService.getBalance(chatId).toString();
+        return answerMessage;
+    }
+
+    private CommandType getComamndType(String text, Locale userLocale) throws CommandNotFoundExp{
+       if (text.equals(CommandType.GET_BALANCE.getCommandName(userLocale))){
+            return CommandType.GET_BALANCE;
+       }
+
+       throw new CommandNotFoundExp();
     }
 
     /**
@@ -71,8 +99,8 @@ public class MessageHandler extends SendDocument {
      * @throws NeedRegistrationExp
      */
     private void checkUserRegistration(Integer chatId) throws NeedRegistrationExp {
-        User userInDb = userService.getUserByChatId(chatId);
-        if (userInDb == null) {
+        TgUser tgUserInDb = userService.getUserByChatId(chatId);
+        if (tgUserInDb == null) {
             log.info("User: " + chatId + " is not registered");
             throw  new NeedRegistrationExp();
         }

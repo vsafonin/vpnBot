@@ -20,7 +20,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class TgUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -74,8 +74,8 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return isActive == user.isActive && chatId.equals(user.chatId) && name.equals(user.name) && Objects.equals(balance, user.balance) && Objects.equals(dateExpired, user.dateExpired) && Objects.equals(dateRegistration, user.dateRegistration) && Objects.equals(description, user.description) && inviteCode.equals(user.inviteCode);
+        TgUser tgUser = (TgUser) o;
+        return isActive == tgUser.isActive && chatId.equals(tgUser.chatId) && name.equals(tgUser.name) && Objects.equals(balance, tgUser.balance) && Objects.equals(dateExpired, tgUser.dateExpired) && Objects.equals(dateRegistration, tgUser.dateRegistration) && Objects.equals(description, tgUser.description) && inviteCode.equals(tgUser.inviteCode);
     }
 
     @Override

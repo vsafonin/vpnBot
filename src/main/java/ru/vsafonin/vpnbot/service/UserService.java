@@ -1,9 +1,12 @@
 package ru.vsafonin.vpnbot.service;
 
-import ru.vsafonin.vpnbot.entity.User;
+import ru.vsafonin.vpnbot.entity.TgUser;
+
+import java.math.BigDecimal;
 
 public interface UserService{
 
-    User getUserByChatId(Integer chatId);
+    TgUser getUserByChatId(Integer chatId);
 
+    BigDecimal getBalance(Integer chatId);
 }
