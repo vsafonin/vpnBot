@@ -3,7 +3,10 @@ package ru.vsafonin.vpnbot.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -35,6 +38,8 @@ public class TgUser {
     private Integer chatId;
 
     @Column(name = "name")
+    @NotBlank(message = "{tgUser.validation.name.notBlank}")
+    @Length(min = 3, max = 256, message = "{tgUser.validation.length}")
     private String name;
 
     @Column(name = "balance")
@@ -50,23 +55,30 @@ public class TgUser {
     private LocalDateTime dateRegistration;
 
     @Column(name = "description")
-    private String description;
+    @NotBlank(message = "{tgUser.validation.description.notBlank}")
+    @Length(min = 3, max = 256, message = "{tgUser.validation.length}")
+    private String inviterDescription;
 
 
     @Column(name = "invite_code")
     private String inviteCode;
 
+    @Column(name = "isAdmin")
+    private boolean isAdmin;
+
     @Override
     public String toString() {
-        return "User{" +
-                "chat_id=" + chatId +
+        return "TgUser{" +
+                "id=" + id +
+                ", chatId=" + chatId +
                 ", name='" + name + '\'' +
                 ", balance=" + balance +
                 ", isActive=" + isActive +
                 ", dateExpired=" + dateExpired +
                 ", dateRegistration=" + dateRegistration +
-                ", description='" + description + '\'' +
+                ", description='" + inviterDescription + '\'' +
                 ", inviteCode='" + inviteCode + '\'' +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 
@@ -75,11 +87,15 @@ public class TgUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TgUser tgUser = (TgUser) o;
-        return isActive == tgUser.isActive && chatId.equals(tgUser.chatId) && name.equals(tgUser.name) && Objects.equals(balance, tgUser.balance) && Objects.equals(dateExpired, tgUser.dateExpired) && Objects.equals(dateRegistration, tgUser.dateRegistration) && Objects.equals(description, tgUser.description) && inviteCode.equals(tgUser.inviteCode);
+        return isActive == tgUser.isActive && chatId.equals(tgUser.chatId) && name.equals(tgUser.name) && Objects.equals(balance, tgUser.balance) && Objects.equals(dateExpired, tgUser.dateExpired) && Objects.equals(dateRegistration, tgUser.dateRegistration) && Objects.equals(inviterDescription, tgUser.inviterDescription) && inviteCode.equals(tgUser.inviteCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, name, balance, isActive, dateExpired, dateRegistration, description, inviteCode);
+        return Objects.hash(chatId, name, balance, isActive, dateExpired, dateRegistration, inviterDescription, inviteCode);
+    }
+
+    public boolean isAdmin() {
+        return this.isAdmin;
     }
 }

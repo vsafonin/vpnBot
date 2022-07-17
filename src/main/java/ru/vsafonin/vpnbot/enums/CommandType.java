@@ -9,7 +9,10 @@ public enum CommandType {
     GET_VPN_FILE("getVpnFile"),
     HAVE_PROBLEM("haveProblem"),
     PAY_LINK("payLink"),
-    ADD_FRIEND("addFriend");
+    ADD_FRIEND("addFriend"),
+    SPAM_MESSAGE("spamMessage")
+    ;
+
 
     private String commandName;
 

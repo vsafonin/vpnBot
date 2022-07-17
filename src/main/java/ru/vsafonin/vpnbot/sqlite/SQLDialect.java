@@ -18,6 +18,11 @@ public class SQLDialect extends Dialect{
         registerColumnType(Types.VARCHAR, "varchar");
         registerColumnType(Types.INTEGER, "integer");
         registerColumnType(Types.BOOLEAN, "integer");
+        registerColumnType(Types.DECIMAL, "decimal");
+        registerColumnType(Types.DATE, "date");
+        registerColumnType(Types.TIME, "time");
+        registerColumnType(Types.TIMESTAMP, "timestamp");
+        registerColumnType(Types.NUMERIC, "numeric");
         registerColumnType(Types.NULL, "null");
 
         registerFunction("concat", new VarArgsSQLFunction(StringType.INSTANCE, "", "||", ""));

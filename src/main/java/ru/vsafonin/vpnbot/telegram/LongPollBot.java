@@ -3,6 +3,7 @@ package ru.vsafonin.vpnbot.telegram;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,6 +17,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * for registration bot in the Telegram, we need to fill both parameters in application.properties:
  * - botName
  * - botToken
+ *
  */
 @Component
 @Slf4j
